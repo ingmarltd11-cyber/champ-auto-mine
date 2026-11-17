@@ -13,4 +13,5 @@
 | Source | https://github.com/ingmarltd11-cyber/champ-auto-mine |
 | Issues | https://github.com/ingmarltd11-cyber/champ-auto-mine/issues |
 | Icon | `icon.png` |
-| Gallery | `screenshots/gui.png` |
+| Wordmark | `logo.png` |
+| Gallery | `screenshots/gui.png`, `screenshots/keybinds.png` |

@@ -9,12 +9,17 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import java.util.Random;
 
 public final class AutoMineController {
+    private static final Random RANDOM = new Random();
     private static float startYaw;
     private static int avoidTicks;
     private static Direction avoidDirection;
     private static BlockPos miningTarget;
+    private static int humanPauseTicks;
+    private static int humanIdleTicks;
+    private static float humanPhase;
     private static String status = "Ready";
 
     private AutoMineController() {
@@ -41,6 +46,9 @@ public final class AutoMineController {
         avoidTicks = 0;
         avoidDirection = null;
         miningTarget = null;
+        humanPauseTicks = 0;
+        humanIdleTicks = 0;
+        humanPhase = 0.0F;
         AutoMineConfig.enabled = true;
         status = "Mining forward";
         AutoMineConfig.save();
@@ -53,8 +61,26 @@ public final class AutoMineController {
             return;
         }
 
-        if (AutoMineConfig.lockPitch) client.player.setPitch(AutoMineConfig.pitch);
-        if (AutoMineConfig.lockYaw) client.player.setYaw(startYaw);
+        applyLook(client);
+
+        if (humanPauseTicks > 0) {
+            humanPauseTicks--;
+            releaseKeys(client);
+            status = "Pausing";
+            return;
+        }
+
+        if (AutoMineConfig.humanMode) {
+            humanPhase += 0.035F;
+            if (humanIdleTicks > 0) humanIdleTicks--;
+            if (humanIdleTicks == 0 && RANDOM.nextInt(180) == 0) {
+                humanPauseTicks = 2 + RANDOM.nextInt(5);
+                humanIdleTicks = 40 + RANDOM.nextInt(80);
+                releaseKeys(client);
+                status = "Pausing";
+                return;
+            }
+        }
 
         if (AutoMineConfig.avoidLava) {
             if (avoidTicks > 0) {
@@ -87,6 +113,13 @@ public final class AutoMineController {
                 return;
             }
             miningTarget = null;
+            if (AutoMineConfig.humanMode) {
+                humanPauseTicks = 2 + RANDOM.nextInt(5);
+                humanIdleTicks = 30 + RANDOM.nextInt(50);
+                releaseKeys(client);
+                status = "Pausing";
+                return;
+            }
         }
 
         BlockPos ahead = client.player.getBlockPos().offset(facing);
@@ -155,8 +188,7 @@ public final class AutoMineController {
             avoidDirection = null;
             return;
         }
-        if (AutoMineConfig.lockPitch) client.player.setPitch(AutoMineConfig.pitch);
-        if (AutoMineConfig.lockYaw) client.player.setYaw(startYaw);
+        applyLook(client);
         boolean left = avoidDirection == facing.rotateYCounterclockwise();
         setKey(client, client.options.leftKey, left);
         setKey(client, client.options.rightKey, !left);
@@ -169,6 +201,8 @@ public final class AutoMineController {
         miningTarget = null;
         avoidTicks = 0;
         avoidDirection = null;
+        humanPauseTicks = 0;
+        humanIdleTicks = 0;
         releaseKeys(client);
         status = reason;
         AutoMineConfig.save();
@@ -180,6 +214,20 @@ public final class AutoMineController {
         if (client.options == null) return;
         setKey(client, client.options.forwardKey, false);
         setKey(client, client.options.attackKey, false);
+    }
+
+    private static void applyLook(MinecraftClient client) {
+        if (client.player == null) return;
+        float pitchOffset = AutoMineConfig.humanMode
+            ? (float) Math.sin(humanPhase * 1.4F) * 0.35F : 0.0F;
+        float yawOffset = AutoMineConfig.humanMode
+            ? (float) Math.sin(humanPhase) * 0.45F : 0.0F;
+        if (AutoMineConfig.lockPitch) {
+            client.player.setPitch(Math.max(-90.0F, Math.min(90.0F, AutoMineConfig.pitch + pitchOffset)));
+        }
+        if (AutoMineConfig.lockYaw) {
+            client.player.setYaw(startYaw + yawOffset);
+        }
     }
 
     private static void releaseStrafe(MinecraftClient client) {

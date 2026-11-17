@@ -1,5 +1,7 @@
 # Champ Auto Mine
 
+![Champ Auto Mine logo](https://raw.githubusercontent.com/ingmarltd11-cyber/champ-auto-mine/main/logo.png)
+
 A compact **client-side tunnel miner** for **Minecraft 1.21.11** on **Fabric**, with a native Minecraft GUI.
 
 ![Champ Auto Mine GUI](https://raw.githubusercontent.com/ingmarltd11-cyber/champ-auto-mine/main/screenshots/gui.png)
@@ -15,6 +17,9 @@ Everything runs on the client. The mod has no API-key code, no accounts, no anal
 - Holds forward and attack for you.
 - Lava and fire detection up to 8 blocks ahead.
 - Automatic short strafe to the safer side.
+- Optional Mod Menu 17.0.1 integration with a config button in the mod list.
+- Built-in keybind editor with rebind and reset.
+- Human Mode with light view sway and occasional short pauses.
 - Compact native Minecraft GUI for GUI scale 2.
 - Settings saved in `config/champ-auto-mine.json`.
 - Fabric and Java 21, client side only.
@@ -23,14 +28,17 @@ Everything runs on the client. The mod has no API-key code, no accounts, no anal
 ## How to use
 
 1. Install Fabric Loader for Minecraft 1.21.11 and Fabric API.
-2. Put `champ-auto-mine-1.0.0.jar` in your `mods` folder.
-3. Join a world and face the direction you want to tunnel.
+2. Put `champ-auto-mine-1.1.0.jar` in your `mods` folder.
+3. Optional: add Mod Menu 17.0.1 or newer to open the settings from the mod list.
+4. Join a world and face the direction you want to tunnel.
 4. Hold the correct pickaxe in your main hand.
 5. Press `F6` to open the panel.
 6. Press `Auto Mine: OFF` or press `F7` to start.
 7. Press `F7` again to stop.
 
-Closing the panel with `Escape` does not stop the miner. Change the keybinds in Minecraft's Controls screen if `F6` or `F7` conflicts with another mod.
+Closing the panel with `Escape` does not stop the miner. Change the keybinds under `Keybinds...` in the panel, or in Minecraft's Controls screen. `Reset keys` restores F6 and F7.
+
+Human Mode is on by default. It adds small view sway and short pauses for a more natural camera; turn it off for the old rigid lock.
 
 ## Options
 
@@ -42,6 +50,7 @@ Closing the panel with `Escape` does not stop the miner. Change the keybinds in 
 | Auto forward | On | Holds the forward key. |
 | Auto break | On | Holds attack and mines ahead. |
 | Avoid lava | On | Scans for lava and fire and strafes away. |
+| Human Mode | On | Adds small view sway and occasional short pauses. |
 | Scan range | 4 | Hazard scan distance from 1 to 8 blocks. |
 
 ## Compatibility
@@ -51,6 +60,7 @@ Closing the panel with `Escape` does not stop the miner. Change the keybinds in 
 | Minecraft | 1.21.11 |
 | Loader | Fabric Loader 0.19.0+ |
 | Dependency | Fabric API |
+| Optional | Mod Menu 17.0.1+ |
 | Java | 21 |
 | Environment | Client |
 | License | MIT |

@@ -17,15 +17,22 @@ public final class AutoMineScreen extends Screen {
     private static final int PANEL = 0xFF14111F;
     private static final int BORDER = 0xFF322B4C;
 
+    private final Screen parent;
     private ButtonWidget stateButton;
     private ButtonWidget lockPitchButton;
     private ButtonWidget lockYawButton;
     private ButtonWidget forwardButton;
     private ButtonWidget breakButton;
     private ButtonWidget lavaButton;
+    private ButtonWidget humanButton;
 
     public AutoMineScreen() {
+        this(null);
+    }
+
+    public AutoMineScreen(Screen parent) {
         super(Text.literal("Champ Auto Mine"));
+        this.parent = parent;
     }
 
     @Override
@@ -35,7 +42,7 @@ public final class AutoMineScreen extends Screen {
         int x = width / 2 - panelW / 2;
         int y = (height - panelH) / 2;
         int gap = 6;
-        int toggleW = (panelW - 44 - gap) / 2;
+        int half = (panelW - 44 - gap) / 2;
 
         stateButton = addDrawableChild(ButtonWidget.builder(Text.literal("Auto Mine: OFF"), button -> {
             AutoMineController.toggle(client);
@@ -45,30 +52,38 @@ public final class AutoMineScreen extends Screen {
         lockPitchButton = addDrawableChild(ButtonWidget.builder(Text.literal("Lock Pitch"), button -> {
             AutoMineConfig.lockPitch = !AutoMineConfig.lockPitch;
             refresh();
-        }).dimensions(x + 22, y + 70, toggleW, 18).build());
+        }).dimensions(x + 22, y + 70, half, 18).build());
         lockYawButton = addDrawableChild(ButtonWidget.builder(Text.literal("Lock Yaw"), button -> {
             AutoMineConfig.lockYaw = !AutoMineConfig.lockYaw;
             refresh();
-        }).dimensions(x + 22 + toggleW + gap, y + 70, toggleW, 18).build());
+        }).dimensions(x + 22 + half + gap, y + 70, half, 18).build());
         forwardButton = addDrawableChild(ButtonWidget.builder(Text.literal("Auto Forward"), button -> {
             AutoMineConfig.autoForward = !AutoMineConfig.autoForward;
             refresh();
-        }).dimensions(x + 22, y + 90, toggleW, 18).build());
+        }).dimensions(x + 22, y + 90, half, 18).build());
         breakButton = addDrawableChild(ButtonWidget.builder(Text.literal("Auto Break"), button -> {
             AutoMineConfig.autoBreak = !AutoMineConfig.autoBreak;
             refresh();
-        }).dimensions(x + 22 + toggleW + gap, y + 90, toggleW, 18).build());
+        }).dimensions(x + 22 + half + gap, y + 90, half, 18).build());
         lavaButton = addDrawableChild(ButtonWidget.builder(Text.literal("Avoid Lava"), button -> {
             AutoMineConfig.avoidLava = !AutoMineConfig.avoidLava;
             refresh();
-        }).dimensions(x + 22, y + 110, toggleW, 18).build());
-        addDrawableChild(ButtonWidget.builder(Text.literal("Close"), button -> close())
-            .dimensions(x + 22 + toggleW + gap, y + 110, toggleW, 18).build());
+        }).dimensions(x + 22, y + 110, half, 18).build());
+        humanButton = addDrawableChild(ButtonWidget.builder(Text.literal("Human Mode"), button -> {
+            AutoMineConfig.humanMode = !AutoMineConfig.humanMode;
+            refresh();
+        }).dimensions(x + 22 + half + gap, y + 110, half, 18).build());
 
-        addDrawableChild(new FloatSlider(x + 22, y + 138, panelW - 44, 18,
+        addDrawableChild(new FloatSlider(x + 22, y + 136, panelW - 44, 18,
             "Pitch", AutoMineConfig.pitch, -90.0F, 90.0F, value -> AutoMineConfig.pitch = value));
-        addDrawableChild(new IntSlider(x + 22, y + 160, panelW - 44, 18,
+        addDrawableChild(new IntSlider(x + 22, y + 158, panelW - 44, 18,
             "Scan Range", AutoMineConfig.scanRange, 1, 8, value -> AutoMineConfig.scanRange = value));
+
+        addDrawableChild(ButtonWidget.builder(Text.literal("Keybinds..."), button ->
+            client.setScreen(new AutoMineKeybindsScreen(this)))
+            .dimensions(x + 22, y + 184, half, 18).build());
+        addDrawableChild(ButtonWidget.builder(Text.literal("Close"), button -> close())
+            .dimensions(x + 22 + half + gap, y + 184, half, 18).build());
         refresh();
     }
 
@@ -79,6 +94,11 @@ public final class AutoMineScreen extends Screen {
         forwardButton.setMessage(Text.literal(AutoMineConfig.autoForward ? "[x] Auto Forward" : "[ ] Auto Forward"));
         breakButton.setMessage(Text.literal(AutoMineConfig.autoBreak ? "[x] Auto Break" : "[ ] Auto Break"));
         lavaButton.setMessage(Text.literal(AutoMineConfig.avoidLava ? "[x] Avoid Lava" : "[ ] Avoid Lava"));
+        humanButton.setMessage(Text.literal(AutoMineConfig.humanMode ? "[x] Human Mode" : "[ ] Human Mode"));
+    }
+
+    private static String keyName(net.minecraft.client.option.KeyBinding binding) {
+        return binding == null ? "unbound" : binding.getBoundKeyLocalizedText().getString();
     }
 
     @Override
@@ -92,11 +112,10 @@ public final class AutoMineScreen extends Screen {
         context.fill(x, y, x + panelW, y + 2, ACCENT);
         context.fill(x, y + panelH - 1, x + panelW, y + panelH, BORDER);
         context.drawText(this.textRenderer, this.title, x + 22, y + 9, TEXT, false);
-        context.drawText(this.textRenderer, Text.literal("Native Minecraft controls - F6 opens, F7 toggles"),
-            x + 22, y + 20, MUTED, false);
+        context.drawText(this.textRenderer, Text.literal(
+            "Human-friendly mining - " + keyName(AutoMineMod.openKey()) + " opens, "
+                + keyName(AutoMineMod.toggleKey()) + " toggles"), x + 22, y + 20, MUTED, false);
         context.drawText(this.textRenderer, Text.literal(AutoMineController.status()), x + 22, y + 57, MUTED, false);
-        context.drawText(this.textRenderer, Text.literal("F6 menu  |  F7 toggle"),
-            x + 22, y + 190, MUTED, false);
         super.render(context, mouseX, mouseY, deltaTicks);
     }
 
@@ -117,7 +136,7 @@ public final class AutoMineScreen extends Screen {
     @Override
     public void close() {
         AutoMineConfig.save();
-        super.close();
+        if (client != null) client.setScreen(parent);
     }
 
     @Override

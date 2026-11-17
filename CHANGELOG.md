@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.0 - 2026-11-17
+
+### Added
+
+- Optional Mod Menu 17.0.1 integration.
+- In-game keybind editor with rebind and reset.
+- Human Mode with light view sway and short randomized pauses.
+- Wordmark logo for the README and release.
+
+### Changed
+
+- Config screens return to Mod Menu when opened from the mod list.
+- Default keybinds remain F6 and F7.
+
 ## 1.0.0 - 2026-11-17
 
 ### Added

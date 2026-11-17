@@ -14,12 +14,16 @@
     "issues": "https://github.com/ingmarltd11-cyber/champ-auto-mine/issues"
   },
   "entrypoints": {
-    "client": ["com.champ.automine.AutoMineMod"]
+    "client": ["com.champ.automine.AutoMineMod"],
+    "modmenu": ["com.champ.automine.ModMenuIntegration"]
   },
   "depends": {
     "fabricloader": ">=0.19.0",
     "minecraft": "~1.21.11",
     "java": ">=21",
     "fabric-api": "*"
+  },
+  "suggests": {
+    "modmenu": ">=17.0.1"
   }
 }

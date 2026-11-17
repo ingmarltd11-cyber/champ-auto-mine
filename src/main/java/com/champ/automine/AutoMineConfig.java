@@ -16,6 +16,7 @@ public final class AutoMineConfig {
     public static boolean autoForward = true;
     public static boolean autoBreak = true;
     public static boolean avoidLava = true;
+    public static boolean humanMode = true;
     public static int scanRange = 4;
 
     private AutoMineConfig() {
@@ -38,6 +39,7 @@ public final class AutoMineConfig {
             autoForward = data.autoForward;
             autoBreak = data.autoBreak;
             avoidLava = data.avoidLava;
+            if (data.humanMode != null) humanMode = data.humanMode;
             scanRange = Math.max(1, Math.min(8, data.scanRange));
         } catch (Throwable ignored) {
         }
@@ -60,6 +62,7 @@ public final class AutoMineConfig {
         boolean autoForward = AutoMineConfig.autoForward;
         boolean autoBreak = AutoMineConfig.autoBreak;
         boolean avoidLava = AutoMineConfig.avoidLava;
+        Boolean humanMode = AutoMineConfig.humanMode;
         int scanRange = AutoMineConfig.scanRange;
     }
 }

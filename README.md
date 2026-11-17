@@ -1,5 +1,7 @@
 # Champ Auto Mine
 
+![Champ Auto Mine](logo.png)
+
 A compact client-side tunnel miner for **Minecraft 1.21.11** on **Fabric**, with a native Minecraft GUI.
 
 ![Champ Auto Mine GUI](screenshots/gui.png)
@@ -14,6 +16,9 @@ Champ Auto Mine keeps forward and attack held while you face a direction. It loc
 - Holds forward and attack; releases both when stopped.
 - Lava and fire detection up to 8 blocks ahead and to the sides.
 - Short automatic strafe to the safer side when a hazard is found.
+- Optional Mod Menu 17.0.1 integration; open the settings from the mod list.
+- Built-in keybind editor with rebind and reset.
+- Human Mode with light view sway and occasional short pauses.
 - Native Minecraft buttons and sliders, designed for GUI scale 2.
 - Settings persist in `config/champ-auto-mine.json`.
 - Small, clean codebase with a sources jar for every release.
@@ -32,8 +37,9 @@ Champ Auto Mine keeps forward and attack held while you face a direction. It loc
 
 1. Install Fabric Loader for Minecraft 1.21.11.
 2. Put Fabric API in your `mods` folder.
-3. Put `champ-auto-mine-1.0.0.jar` in the same `mods` folder.
-4. Start the game with the Fabric profile.
+3. Put `champ-auto-mine-1.1.0.jar` in the same `mods` folder.
+4. Optional: install Mod Menu 17.0.1 or newer to open the settings from the mod list.
+5. Start the game with the Fabric profile.
 
 The sources jar is for reading and building, not for the `mods` folder.
 
@@ -45,7 +51,9 @@ The sources jar is for reading and building, not for the `mods` folder.
 | `F7` | Start or stop mining |
 | `Escape` | Close the panel without stopping the miner |
 
-Keybinds can be changed in Minecraft's normal Controls screen under the Champ Auto Mine category. If `F6` or `F7` is already used by another mod, rebind it there.
+Change the keys in the panel under `Keybinds...`, or in Minecraft's normal Controls screen under the Champ Auto Mine category. `Reset keys` restores the F6 and F7 defaults. If either key is already used by another mod, rebind it in the panel.
+
+![Champ Auto Mine keybinds](screenshots/keybinds.png)
 
 ## Usage
 
@@ -54,6 +62,8 @@ Keybinds can be changed in Minecraft's normal Controls screen under the Champ Au
 3. Press `F6` and set the pitch and scan range.
 4. Press `Auto Mine: OFF` or press `F7` to start.
 5. Press `F7` again to stop. Closing the screen with `Escape` leaves the miner running.
+
+Human Mode is on by default. It adds a small amount of view sway and short pauses so the tunnel does not look perfectly robotic. Turn it off if you want the old rigid camera lock.
 
 The miner does not switch tools, place torches, collect drops, eat food or fight mobs. Keep the right tool selected and watch your surroundings.
 
@@ -67,6 +77,7 @@ The miner does not switch tools, place torches, collect drops, eat food or fight
 | Auto forward | On | Holds the forward key. |
 | Auto break | On | Holds attack and mines the block ahead. |
 | Avoid lava | On | Scans for lava and fire and strafes to the safer side. |
+| Human Mode | On | Adds small view sway and occasional short pauses for a more natural camera. |
 | Scan range | 4 | Hazard scan distance, from 1 to 8 blocks. |
 
 The panel is deliberately compact. At GUI scale 2 it fits a 427 x 240 logical screen. The sliders show their current value in the label.
@@ -106,8 +117,8 @@ gradlew.bat build
 The mod jar and sources jar are written to `build/libs/`:
 
 ```
-champ-auto-mine-1.0.0.jar
-champ-auto-mine-1.0.0-sources.jar
+champ-auto-mine-1.1.0.jar
+champ-auto-mine-1.1.0-sources.jar
 ```
 
 To run a development client:
