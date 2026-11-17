@@ -1,7 +1,5 @@
 # Modrinth project settings
 
-## Modrinth project settings
-
 | Field | Value |
 | --- | --- |
 | Title | Champ Auto Mine |
